@@ -3,7 +3,6 @@
 #include <cstddef>
 #include <iostream>
 #include <string>
-#include "settings.h"
 
 
 namespace ME {
@@ -22,7 +21,7 @@ size_t textureLoader::isTextureLoaded(textureLoader::textureCTX ctx){
 
 		#ifndef PRINTFULLPATH
 			std::cout << "textureLoader: " 
-				<< std::string(ctx.texturePath).erase(0, std::string(RESOURCES_PATH).size()) 
+				<< std::string(ctx.texturePath).substr(std::string(ctx.texturePath).find("resources"))
 				<< " was loaded\n";
 		#else 
 			std::cout << "textureLoader: " << ctx.texturePath << " was loaded" << std::endl;

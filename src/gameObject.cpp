@@ -59,7 +59,7 @@ void gameObject::updateVector(float DT, std::vector<gameObject*>& GV){
 		for (auto& go : GV){
 			if (go->erased || go->renderer.rendered) continue;
 			if (go->renderer.renderLayer.name == layer.name) {
-				Renderer::renderOrder.emplace_back(currentRenderOrder++, go->id, go);
+				Renderer::renderOrder.push_back({currentRenderOrder++, go->id, go});
 				//std::cout << "rendered object: " << go->id << std::endl;
 				go->renderer.rendered = true;
 			}
@@ -167,9 +167,9 @@ void gameObject::collisionStruct::updateCollision(gameObject* go, std::vector<st
 }
 
 //need refactor
-void gameObject::newLayer(std::string name, int order){
+void gameObject::newLayer(std::string name, size_t order){
 	for(auto& l : Renderer::layers) if(l.name == name){ std::cerr << "layer already exists" << std::endl;return; };
-	Renderer::layers.emplace_back(name, order);
+	Renderer::layers.push_back({name, order});
     std::sort(Renderer::layers.begin(), Renderer::layers.end(), [](const Renderer::renderLayerStruct& a, const Renderer::renderLayerStruct& b){
         return a.order < b.order;
     });

@@ -82,7 +82,7 @@ public:
 		gameObject* collidedWith = nullptr;
 	}collision;
 	
-	static void newLayer(std::string, int);
+	static void newLayer(std::string, size_t);
 	static void addToLayer(gameObject*, std::string);
 	static bool checkLayer(std::string, std::vector<Renderer::renderLayerStruct>*);
  
