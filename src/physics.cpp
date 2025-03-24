@@ -1,6 +1,6 @@
 #include "physics.h"
 #include "gameObject.h"
-#include "raylib.h"
+#include <raylib.h>
 #include <cstdio>
 
 namespace ME {

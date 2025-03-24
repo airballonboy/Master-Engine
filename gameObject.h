@@ -2,7 +2,7 @@
 #include <cstddef>
 #include <string>
 #include <vector>
-#include "raylib.h"
+#include <raylib.h>
 #include "renderer.h"
 
 // TODO: Need to comment more on the code and make documentation
