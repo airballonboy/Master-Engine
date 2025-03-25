@@ -75,9 +75,10 @@ void gameObject::updateByRef(float DT, gameObject* go){
 void gameObject::updateRects(gameObject* go){
 	// TODO: make Textures with 1px gap between each texture and making a system for it
 	go->renderer.textureRect = {
-		// ----------- getting the real frame pos -----------|----------------- added texture padding -----------------
+		// Origin
 		go->renderer.framePos.x * go->renderer.textureSize.x + go->renderer.texturePadding.x * go->renderer.framePos.x,
 		go->renderer.framePos.y * go->renderer.textureSize.y + go->renderer.texturePadding.y * go->renderer.framePos.y,
+		// Size
 		go->renderer.textureSize.x - 1,
 		go->renderer.textureSize.y - 1 
 	};
