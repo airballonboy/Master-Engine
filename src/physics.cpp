@@ -1,4 +1,4 @@
-#include "physics.h"
+#include "physics/physics.h"
 #include "gameObject.h"
 #include <raylib.h>
 #include <cstdio>
