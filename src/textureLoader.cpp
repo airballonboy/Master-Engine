@@ -1,7 +1,7 @@
+#include "logger/logger.h"
 #include "textureLoader.h"
 #include <raylib.h>
 #include <cstddef>
-#include <iostream>
 #include <string>
 
 
@@ -15,16 +15,15 @@ size_t textureLoader::isTextureLoaded(textureLoader::textureCTX ctx){
 	loadedTextures.push_back(LoadTexture(ctx.texturePath));
 	
 	if (loadedTextures[i].id == 0)
-		std::cerr << "textureLoader: " << "error this file couldn't be opened\n";
+		logger::error("textureLoader: ", "this file couldn't be opened");
 	else {
 		SetTextureFilter(loadedTextures[i], TEXTURE_FILTER_POINT);
 
 		#ifndef PRINTFULLPATH
-			std::cout << "textureLoader: " 
-				<< std::string(ctx.texturePath).substr(std::string(ctx.texturePath).find("resources"))
-				<< " was loaded\n";
-		#else 
-			std::cout << "textureLoader: " << ctx.texturePath << " was loaded" << std::endl;
+			std::string shortPath = std::string(ctx.texturePath).substr(std::string(ctx.texturePath).find("resources"));
+			logger::success("textureLoader: ", (shortPath + " was loaded").c_str());
+		#else
+			logger::success("textureLoader: ", (std::string(ctx.texturePath) + " was loaded").c_str());
 		#endif
 
 	}
@@ -36,13 +35,18 @@ void textureLoader::reloadTextures(){
 	size_t clearedSize = sizeof(loadedTextures);
 	for (auto& t : loadedTextures) UnloadTexture(t);
 	loadedTextures.clear();
-	std::cout << "textureLoader: " << clearedCount << " textures were cleared" << std::endl;
-	std::cout << "textureLoader: " << clearedSize << " bytes were cleared" << std::endl;
+	logger::success("textureLoader: ", (std::to_string(clearedCount) + " textures were cleared").c_str());
+	logger::success("textureLoader: ", (std::to_string(clearedSize)  + " bytes were cleared"   ).c_str());
 	size_t i = 0;
 	for (auto& ctx : textureCTXs){
 		loadedTextures.push_back(LoadTexture(ctx.texturePath));
 		SetTextureFilter(loadedTextures[i++], TEXTURE_FILTER_POINT);
-		std::cout << "textureLoader: " << ctx.texturePath << " was reloaded" << std::endl;
+		#ifndef PRINTFULLPATH
+			std::string shortPath = std::string(ctx.texturePath).substr(std::string(ctx.texturePath).find("resources"));
+			logger::success("textureLoader: ", (shortPath + " was reloaded").c_str());
+		#else
+			logger::success("textureLoader: ", (std::string(ctx.texturePath) + " was reloaded").c_str());
+		#endif
 	}
 }
 
