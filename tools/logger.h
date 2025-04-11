@@ -7,15 +7,15 @@
 namespace logger {
 
 enum color{
-	NOCOLOR = 0,
-	BLACK	= 30,
-	RED 	= 31,
-	GREEN	= 32,
-	YELLOW	= 33,
-	BLUE	= 34,
-	MAGENTA	= 35,
-	CYAN	= 36,
-	WHITE	= 37,
+	NoColor = 0,
+	Black	= 30,
+	Red 	= 31,
+	Green	= 32,
+	Yellow	= 33,
+	Blue	= 34,
+	Magenta	= 35,
+	Cyan	= 36,
+	White	= 37,
 };
 
 inline void log(const color color, const char* text)
