@@ -24,13 +24,13 @@ public:
 
 
 	//Updates the object referenced
-	static void	updateByRef(float deltaTime, gameObject* gameObject);
+	static void	updateByRef(float deltaTime, gameObject* object);
 
 	//Updates the full Vector of pointers to objects
 	static void	updateVector(float deltaTime, std::vector<gameObject*>& vector);
 
 	//Update the textureRect and posRect to the values of current frame
-	static void	updateRects(gameObject* gameObject);
+	static void	updateRects(gameObject* object);
 	
 	//Gets the iterator of the object with the id in this Vector
 	static size_t getIterator(size_t id, std::vector<gameObject*>& vector);
@@ -65,14 +65,14 @@ public:
 
 	struct collisionStruct {
 		//Checks every object collision in the Vector refernced
-		static void updateCollision(std::vector<gameObject*>& GV);
+		static void updateCollision(std::vector<gameObject*>& gameVector);
 
 		//How to use vector of vectors collisions
 			//std::vector<std::vector<gameObject*>> a;
 			//a.push_back(playerData.BV);
 			//gameObject::collisionStruct::updateCollision(&player, a);
 		//checks the collision of the refernced object with every object in the Vector
-		static void updateCollision(gameObject* go, std::vector<std::vector<gameObject*>>& gameVectors);
+		static void updateCollision(gameObject* object, std::vector<std::vector<gameObject*>>& gameVectors);
 
 		std::string tag = "default";
 		colliderType currentColliderType = colliderType::Box;
@@ -82,9 +82,9 @@ public:
 		gameObject* collidedWith = nullptr;
 	}collision;
 	
-	static void newLayer(std::string, size_t);
-	static void addToLayer(gameObject*, std::string);
-	static bool checkLayer(std::string, std::vector<Renderer::renderLayerStruct>*);
+	static void newLayer(std::string layerName, size_t layerOrder);
+	static void addToLayer(gameObject* gameObject, std::string layerName);
+	static bool checkLayer(std::string layerName, std::vector<Renderer::renderLayerStruct>* layersVector);
  
 
 };
