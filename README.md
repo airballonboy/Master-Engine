@@ -10,7 +10,7 @@ You can use mingw or msvc compliers with cmake
 
 <ins>**1. Downloading the repository:**</ins>
 
-Start by cloning the repository with `git clone --recursive https://github.com/airballonboy/Master-Engine`.
+Start by cloning the repository with `git clone https://github.com/airballonboy/Master-Engine`.
 
 <ins>**2. Use in a Project:**</ins>
 
@@ -25,7 +25,7 @@ You can use clang or g++ compilers with cmake
 
 <ins>**1. Downloading the repository:**</ins>
 
-Start by cloning the repository with `git clone --recursive https://github.com/airballonboy/Master-Engine`.
+Start by cloning the repository with `git clone https://github.com/airballonboy/Master-Engine`.
 
 <ins>**2. Use in a Project:**</ins>
 
