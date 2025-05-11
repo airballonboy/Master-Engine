@@ -121,8 +121,13 @@ void gameObject::collisionStruct::updateCollision(std::vector<gameObject*>& GV){
 		if (objA->collision.collided){
 			if (objA->collision.collidedWith->erased || !checkCollision(objA, objA->collision.collidedWith)){
 				objA->collision.collidedWith->collision.collided 	 = false;
+				if(objA->collision.collidedWith->collision.onCollisionExit != nullptr)
+					objA->collision.collidedWith->collision.onCollisionExit(objA);
 				objA->collision.collidedWith->collision.collidedWith = nullptr;
+
 				objA->collision.collided 	 = false;
+				if(objA->collision.onCollisionExit != nullptr)
+					objA->collision.onCollisionExit(objA->collision.collidedWith);
 				objA->collision.collidedWith = nullptr;
 			}
 			continue;
@@ -133,8 +138,12 @@ void gameObject::collisionStruct::updateCollision(std::vector<gameObject*>& GV){
 				//std::cout << "obj: " << objA->id << " collided with obj: " << objB->id << std::endl;
 				objB->collision.collided 	 = true;
 				objB->collision.collidedWith = objA;
+				if(objB->collision.onCollisionEnter != nullptr)
+					objB->collision.onCollisionEnter(objA);
 				objA->collision.collided 	 = true;
 				objA->collision.collidedWith = objB;
+				if(objA->collision.onCollisionEnter != nullptr)
+					objA->collision.onCollisionEnter(objB);
 				break;
 			}
 		}

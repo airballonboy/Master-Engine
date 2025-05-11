@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include <cstddef>
 #include <string>
 #include <vector>
@@ -67,12 +68,17 @@ public:
 		//Checks every object collision in the Vector refernced
 		static void updateCollision(std::vector<gameObject*>& gameVector);
 
+		//Collision functions
+		std::function<void(gameObject* other)> onCollisionEnter	= nullptr;
+		std::function<void(gameObject* other)> onCollisionExit 	= nullptr;
+
 		//How to use vector of vectors collisions
 			//std::vector<std::vector<gameObject*>> a;
 			//a.push_back(playerData.BV);
 			//gameObject::collisionStruct::updateCollision(&player, a);
 		//checks the collision of the refernced object with every object in the Vector
 		static void updateCollision(gameObject* object, std::vector<std::vector<gameObject*>>& gameVectors);
+
 
 		std::string tag = "default";
 		colliderType currentColliderType = colliderType::Box;
