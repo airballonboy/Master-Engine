@@ -114,7 +114,7 @@ void gameObject::collisionStruct::updateCollision(std::vector<gameObject*>& GV){
 		assert(o1 != nullptr && o2 != nullptr && "accessing a nullptr");
 		o1->collision.collisionBox = {o1->transform.pos.x, o1->transform.pos.y, o1->transform.dim.x, o1->transform.dim.y};
 		o2->collision.collisionBox = {o2->transform.pos.x, o2->transform.pos.y, o2->transform.dim.x, o2->transform.dim.y};
-		return CheckCollisionRecs(o1->collision.collisionBox, o2->collision.collisionBox) && (o1->collision.tag == o2->collision.tag);
+		return CheckCollisionRecs(o1->collision.collisionBox, o2->collision.collisionBox);
 	};
 	for (auto& objA : GV) {
 		if (objA->erased || !objA->collision.enableCollision) continue;
