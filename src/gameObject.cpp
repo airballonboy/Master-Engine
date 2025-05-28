@@ -176,13 +176,19 @@ void gameObject::collisionStruct::updateCollision(gameObject* go, std::vector<st
 	}
 }
 
-//need refactor
 void gameObject::newLayer(std::string name, size_t order){
-	for(auto& l : Renderer::layers) if(l.name == name){ std::cerr << "layer already exists" << std::endl;return; };
+	for (auto& l : Renderer::layers) {
+		if(l.name == name){
+			std::cerr << "layer already exists" << std::endl;
+			return;
+		};
+	}
 	Renderer::layers.push_back({name, order});
-    std::sort(Renderer::layers.begin(), Renderer::layers.end(), [](const Renderer::renderLayerStruct& a, const Renderer::renderLayerStruct& b){
-        return a.order < b.order;
-    });
+    std::sort(Renderer::layers.begin(), Renderer::layers.end(), 
+		[](const Renderer::renderLayerStruct& a, const Renderer::renderLayerStruct& b){
+			return a.order < b.order;
+		}
+	);
 }
 bool gameObject::checkLayer(std::string thisName, std::vector<Renderer::renderLayerStruct>* L){
 	bool C;

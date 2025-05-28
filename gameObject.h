@@ -74,22 +74,25 @@ public:
 
 		//How to use vector of vectors collisions
 			//std::vector<std::vector<gameObject*>> a;
-			//a.push_back(playerData.BV);
-			//gameObject::collisionStruct::updateCollision(&player, a);
+			//a.push_back(vector<gameObject*>);
+			//gameObject::collisionStruct::updateCollision(object, a);
 		//checks the collision of the refernced object with every object in the Vector
 		static void updateCollision(gameObject* object, std::vector<std::vector<gameObject*>>& gameVectors);
 
 
 		std::string tag = "default";
 		colliderType currentColliderType = colliderType::Box;
-		Rectangle collisionBox = {0,0,0,0};
+		Rectangle collisionBox   = {0,0,0,0};
 		bool enableCollision 	 = false;
 		bool collided		 	 = false;
 		gameObject* collidedWith = nullptr;
 	}collision;
 	
+	// Adds a new layer if there is no layer with this name
 	static void newLayer(std::string layerName, size_t layerOrder);
+	// Adds a gameObject to existing layer
 	static void addToLayer(gameObject* gameObject, std::string layerName);
+	// Checks if a layer with this name exists
 	static bool checkLayer(std::string layerName, std::vector<Renderer::renderLayerStruct>* layersVector);
  
 
