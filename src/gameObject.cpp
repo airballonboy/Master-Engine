@@ -111,8 +111,8 @@ void gameObject::transformStruct::movement(){
 }
 
 void gameObject::setDimension(Vector2 d){
-	(this->collision.colliderSize.x < d.x) ? this->collision.colliderSize.x = d.x : this->collision.colliderSize.x;
-	(this->collision.colliderSize.y < d.y) ? this->collision.colliderSize.y = d.y : this->collision.colliderSize.y;
+	if (this->collision.colliderSize.x < d.x) this->collision.colliderSize.x = d.x;
+	if (this->collision.colliderSize.y < d.y) this->collision.colliderSize.y = d.y;
 	this->transform.dim = d;
 }
 
