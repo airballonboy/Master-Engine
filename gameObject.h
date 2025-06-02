@@ -12,6 +12,9 @@ namespace ME {
 class gameObject {
 public:
 	inline static size_t currentObjectCount = 0;
+
+	inline static bool showColliderBorders = false;
+
 	size_t id = 0;
 
 	//Indicates that an object currently should not get updated, 
@@ -44,6 +47,8 @@ public:
 	// NOTE: circle not implemented yet
 	enum colliderType{ Box, Circle };
 
+	void setDimension(Vector2 d);
+
 	struct transformStruct {
 		//Updates the movment and pos of this object
 		void movement();
@@ -68,6 +73,9 @@ public:
 		//Checks every object collision in the Vector refernced
 		static void updateCollision(std::vector<gameObject*>& gameVector);
 
+		//Sets the collider size of the gameObject
+		void setColliderSize(Vector2 rect);
+
 		//Collision functions
 		std::function<void(gameObject* other)> onCollisionEnter	= nullptr;
 		std::function<void(gameObject* other)> onCollisionExit 	= nullptr;
@@ -83,6 +91,7 @@ public:
 		std::string tag = "default";
 		colliderType currentColliderType = colliderType::Box;
 		Rectangle collisionBox   = {0,0,0,0};
+		Vector2   colliderSize   = {128,128};
 		bool enableCollision 	 = false;
 		bool collided		 	 = false;
 		gameObject* collidedWith = nullptr;

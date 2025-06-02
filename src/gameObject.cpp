@@ -71,6 +71,8 @@ void gameObject::updateByRef(float DT, gameObject* go){
 	updateRects(go);
 	DrawTexturePro(go->renderer.texture, go->renderer.textureRect, go->transform.posRect, 
 				go->transform.pivot * go->transform.dim, go->transform.rotation, go->renderer.textureColor);
+	if (showColliderBorders)
+		DrawRectangleLinesEx(go->collision.collisionBox, 2, WHITE);
 }
 void gameObject::updateRects(gameObject* go){
 	// TODO: make Textures with 1px gap between each texture and making a system for it
@@ -108,12 +110,27 @@ void gameObject::transformStruct::movement(){
 	vel += acc * GetFrameTime() * 0.5;
 }
 
+void gameObject::setDimension(Vector2 d){
+	(this->collision.colliderSize.x < d.x) ? this->collision.colliderSize.x = d.x : this->collision.colliderSize.x;
+	(this->collision.colliderSize.y < d.y) ? this->collision.colliderSize.y = d.y : this->collision.colliderSize.y;
+	this->transform.dim = d;
+}
+
 void gameObject::collisionStruct::updateCollision(std::vector<gameObject*>& GV){
-	// TODO: add a layer check here
 	auto checkCollision = [](gameObject* o1, gameObject* o2){
 		assert(o1 != nullptr && o2 != nullptr && "accessing a nullptr");
-		o1->collision.collisionBox = {o1->transform.pos.x, o1->transform.pos.y, o1->transform.dim.x, o1->transform.dim.y};
-		o2->collision.collisionBox = {o2->transform.pos.x, o2->transform.pos.y, o2->transform.dim.x, o2->transform.dim.y};
+		o1->collision.collisionBox = {
+			o1->transform.pos.x - (o1->collision.colliderSize.x / 2),
+			o1->transform.pos.y - (o1->collision.colliderSize.y / 2),
+			o1->collision.colliderSize.x,
+			o1->collision.colliderSize.y
+		};
+		o2->collision.collisionBox = {
+			o2->transform.pos.x - (o2->collision.colliderSize.x / 2),
+			o2->transform.pos.y - (o2->collision.colliderSize.y / 2),
+			o2->collision.colliderSize.x,
+			o2->collision.colliderSize.y
+		};
 		return CheckCollisionRecs(o1->collision.collisionBox, o2->collision.collisionBox);
 	};
 	for (auto& objA : GV) {
@@ -150,6 +167,11 @@ void gameObject::collisionStruct::updateCollision(std::vector<gameObject*>& GV){
 
 	}
 }
+
+void gameObject::collisionStruct::setColliderSize(Vector2 vec){
+	this->colliderSize = vec;
+}
+
 void gameObject::collisionStruct::updateCollision(gameObject* go, std::vector<std::vector<gameObject*>>& gameVectors){
 	//Unused
 	if (go->erased) return;
