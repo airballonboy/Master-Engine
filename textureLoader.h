@@ -14,8 +14,11 @@ public:
 	inline static std::vector<Texture2D>  loadedTextures;
 	inline static std::vector<textureCTX> textureCTXs;
 	
-	static size_t	 isTextureLoaded(textureCTX);
-	static void   	 reloadTextures();
+	static size_t isTextureLoaded(textureCTX);
+	static void   reloadTextures();
+	static void   unloadTexture(textureCTX);
+	static void   unloadTextures();
+	static int    GetTextureSizeInBytes(Texture2D texture);
 };
 }
 
