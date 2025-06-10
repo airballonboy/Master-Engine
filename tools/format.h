@@ -1,12 +1,45 @@
 #pragma once
+#include <optional>
+#include <iomanip>
 #include <sstream>
 #include <string>
 #include <stdexcept>
 
 
 // don't worry too much it's chat gpt implementation of std::format
+struct FormatSpec {
+    char fill = ' ';
+    int width = 0;
+};
+
+static FormatSpec parse_format_spec(const std::string& fmt, size_t& i) {
+    FormatSpec spec;
+    if (fmt[i] == ':') {
+        ++i; // skip ':'
+        if (fmt[i] == '0') {
+            spec.fill = '0';
+            ++i;
+        }
+        std::string width_str;
+        while (i < fmt.size() && isdigit(fmt[i])) {
+            width_str += fmt[i++];
+        }
+        if (!width_str.empty()) {
+            spec.width = std::stoi(width_str);
+        }
+    }
+    if (i >= fmt.size() || fmt[i] != '}') {
+        throw std::runtime_error("Malformed format specifier");
+    }
+    ++i; // skip '}'
+    return spec;
+}
+
 template<typename T>
-void append_arg(std::ostringstream& oss, const T& arg) {
+void append_arg(std::ostringstream& oss, const T& arg, const FormatSpec& spec = {}) {
+    if (spec.width > 0) {
+        oss << std::setfill(spec.fill) << std::setw(spec.width);
+    }
     oss << arg;
 }
 
@@ -23,9 +56,10 @@ inline void format_recursive(std::ostringstream& oss, const std::string& fmt, si
 template<typename T, typename... Args>
 void format_recursive(std::ostringstream& oss, const std::string& fmt, size_t& i, const T& first, const Args&... rest) {
     while (i < fmt.size()) {
-        if (fmt[i] == '{' && i + 1 < fmt.size() && fmt[i + 1] == '}') {
-            append_arg(oss, first);
-            i += 2;
+        if (fmt[i] == '{') {
+            ++i; // skip '{'
+            FormatSpec spec = parse_format_spec(fmt, i);
+            append_arg(oss, first, spec);
             format_recursive(oss, fmt, i, rest...);
             return;
         } else {
