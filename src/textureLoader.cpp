@@ -1,6 +1,7 @@
 #include "tools/logger.h"
 #include "textureLoader.h"
 #include "tools/format.h"
+#include <cstring>
 #include <raylib.h>
 #include <cstddef>
 #include <string>
@@ -10,8 +11,9 @@ namespace ME {
 size_t textureLoader::isTextureLoaded(textureLoader::textureCTX ctx){
 	size_t i = 0;
 	for (auto& CTX : textureCTXs){
-		if (ctx.texturePath == CTX.texturePath) return i;
-		else i++;
+		if (strcmp(ctx.texturePath, CTX.texturePath) == 0)
+			return i;
+		i++;
 	}
 	loadedTextures.push_back(LoadTexture(ctx.texturePath));
 	
