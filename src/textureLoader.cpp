@@ -1,17 +1,35 @@
 #include "tools/logger.h"
 #include "textureLoader.h"
 #include "tools/format.h"
+#include <cctype>
+#include <cstdio>
 #include <cstring>
 #include <raylib.h>
 #include <cstddef>
 #include <string>
+#include <fstream>
+enum class Type{ NONE = 0, TEXTURE, SOUND, VIDEO, FONT };
+typedef struct {
+	Type type;
+	std::string label;	
+	std::string path;
+}loadable;
 
+#define EXPECT(c) 		  																									\
+	if(fileContent[i] != c) {																								\
+		logger::error("textureLoader: ", f("error while parsing, expected token {} but got {}", c, fileContent[i]).c_str());\
+	}else {i++;}
+
+#define SKIP_SPACES() 				\
+	while (isspace(fileContent[i])){\
+		i++;						\
+	}
 
 namespace ME {
 size_t textureLoader::isTextureLoaded(textureLoader::textureCTX ctx){
 	size_t i = 0;
 	for (auto& CTX : textureCTXs){
-		if (strcmp(ctx.texturePath, CTX.texturePath) == 0)
+		if (!std::strcmp(ctx.texturePath, CTX.texturePath))
 			return i;
 		i++;
 	}
@@ -32,6 +50,96 @@ size_t textureLoader::isTextureLoaded(textureLoader::textureCTX ctx){
 	}
 	textureCTXs.push_back(ctx);
 	return i;	
+}
+void textureLoader::loadTexturesFromConf(std::string path){
+	std::vector<loadable> shouldLoad;
+	std::string fileContent;
+    std::stringstream contents_stream;
+	std::fstream input(path, std::ios::in);
+	contents_stream << input.rdbuf();
+	fileContent = contents_stream.str();
+	input.close();
+	contents_stream.clear();
+	size_t i = 0;
+	while (i < fileContent.size()){
+		if(isspace(fileContent[i])){
+			i++;
+		}else if(isalpha(fileContent[i])){
+			loadable l;
+			std::string type;
+			std::string identifier;
+			std::string path;
+			type.push_back(fileContent[i++]);
+			while (isalnum(fileContent[i])){
+				type.push_back(fileContent[i++]);
+			}
+			if 		(strcmp(type.c_str(), "texture") == 0) l.type = Type::TEXTURE;
+			else if (strcmp(type.c_str(), "sound"  ) == 0) l.type = Type::SOUND;
+			else if (strcmp(type.c_str(), "font"   ) == 0) l.type = Type::FONT;
+			else if (strcmp(type.c_str(), "video"  ) == 0) l.type = Type::VIDEO;
+			std::cout << f("type: {}\n", type);
+
+			SKIP_SPACES();
+
+			while (isalnum(fileContent[i])){
+				identifier.push_back(fileContent[i++]);
+			}
+			l.label = identifier;
+
+			SKIP_SPACES();
+			EXPECT('=');
+
+			SKIP_SPACES();
+			EXPECT('\"');
+			while (fileContent[i] != '\"') {
+				if (fileContent[i] == '{') {
+					if (i < fileContent.size()) i++;
+					else logger::error("textureLoader: ", "file ended early");
+
+					std::string var;
+					
+					while (fileContent[i] != '}') {
+						if (fileContent[i] == '"'){
+							logger::error("textureLoader: ", "no matching }");
+							break;
+						}
+						var.push_back(fileContent[i]);
+						if (i < fileContent.size()) i++;
+						else logger::error("textureLoader: ", "file ended early");
+					}
+					if (i < fileContent.size()) i++;
+					else logger::error("textureLoader: ", "file ended early");
+					if (!strcmp(var.c_str(), "RESOURCES_PATH")) std::cout << "resources path detected \n";
+				}
+				path.push_back(fileContent[i]);
+				if (i < fileContent.size()) i++;
+				else logger::error("textureLoader: ", "file ended early");
+			}
+			l.path = path;
+			while (fileContent[i] != '\n') {
+				if (i < fileContent.size()) i++;
+			}
+			shouldLoad.push_back(l);
+		}
+	}
+	for (auto& l : shouldLoad){
+		if (l.type == Type::TEXTURE){
+			//std::cout << f("i = {}\n", isTextureLoaded({.texturePath = l.path.c_str()}));
+		}
+	}
+	for (auto& l :shouldLoad){
+		std::string type;
+		if (l.type == Type::TEXTURE) type = "texture";
+		if (l.type == Type::VIDEO)   type = "video"  ;
+		if (l.type == Type::SOUND)   type = "sound"  ;
+		if (l.type == Type::FONT)    type = "font"   ;
+		if (l.type == Type::NONE)    type = "none"   ;
+		std::cout << f("type: {}, label: {}, path: {}\n", type, l.label, l.path);
+	}
+
+}
+void textureLoader::unloadTexturesFromConf(std::string path){
+
 }
 void textureLoader::reloadTextures(){
 	size_t clearedCount = loadedTextures.size();

@@ -1,5 +1,6 @@
 #pragma once
 #include <raylib.h>
+#include <string>
 #include <cstddef>
 #include <vector>
 
@@ -14,9 +15,11 @@ public:
 	inline static std::vector<Texture2D>  loadedTextures;
 	inline static std::vector<textureCTX> textureCTXs;
 	
-	static size_t isTextureLoaded(textureCTX);
+	static size_t isTextureLoaded(textureCTX ctx);
+	static void   loadTexturesFromConf(std::string path);
+	static void   unloadTexturesFromConf(std::string path);
 	static void   reloadTextures();
-	static void   unloadTexture(textureCTX);
+	static void   unloadTexture(textureCTX ctx);
 	static void   unloadTextures();
 	static int    GetTextureSizeInBytes(Texture2D texture);
 };
