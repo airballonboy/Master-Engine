@@ -29,16 +29,19 @@ namespace ME {
 size_t textureLoader::isTextureLoaded(textureLoader::textureCTX ctx){
 	size_t i = 0;
 	for (auto& CTX : textureCTXs){
-		if (!std::strcmp(ctx.texturePath, CTX.texturePath))
+		if (ctx.texturePath == CTX.texturePath) {
 			return i;
+		}
 		i++;
 	}
-	loadedTextures.push_back(LoadTexture(ctx.texturePath));
+	auto t = LoadTexture(ctx.texturePath.c_str());
 	
-	if (loadedTextures[i].id == 0)
+	if (t.id == 0)
 		logger::error("textureLoader: ", "this file couldn't be opened");
 	else {
+		loadedTextures.push_back(t);
 		SetTextureFilter(loadedTextures[i], TEXTURE_FILTER_POINT);
+		textureCTXs.push_back(ctx);
 
 		#ifndef PRINTFULLPATH
 			std::string shortPath = std::string(ctx.texturePath).substr(std::string(ctx.texturePath).find("resources"));
@@ -48,7 +51,6 @@ size_t textureLoader::isTextureLoaded(textureLoader::textureCTX ctx){
 		#endif
 
 	}
-	textureCTXs.push_back(ctx);
 	return i;	
 }
 void textureLoader::loadTexturesFromConf(std::string path){
@@ -77,7 +79,6 @@ void textureLoader::loadTexturesFromConf(std::string path){
 			else if (strcmp(type.c_str(), "sound"  ) == 0) l.type = Type::SOUND;
 			else if (strcmp(type.c_str(), "font"   ) == 0) l.type = Type::FONT;
 			else if (strcmp(type.c_str(), "video"  ) == 0) l.type = Type::VIDEO;
-			std::cout << f("type: {}\n", type);
 
 			SKIP_SPACES();
 
@@ -109,7 +110,8 @@ void textureLoader::loadTexturesFromConf(std::string path){
 					}
 					if (i < fileContent.size()) i++;
 					else logger::error("textureLoader: ", "file ended early");
-					if (!strcmp(var.c_str(), "RESOURCES_PATH")) std::cout << "resources path detected \n";
+					if (!strcmp(var.c_str(), "RESOURCES_PATH")) path.append(RESOURCES_PATH);
+					//std::cout << "resources path detected \n";
 				}
 				path.push_back(fileContent[i]);
 				if (i < fileContent.size()) i++;
@@ -124,17 +126,8 @@ void textureLoader::loadTexturesFromConf(std::string path){
 	}
 	for (auto& l : shouldLoad){
 		if (l.type == Type::TEXTURE){
-			//std::cout << f("i = {}\n", isTextureLoaded({.texturePath = l.path.c_str()}));
+			isTextureLoaded({l.path.c_str()});
 		}
-	}
-	for (auto& l :shouldLoad){
-		std::string type;
-		if (l.type == Type::TEXTURE) type = "texture";
-		if (l.type == Type::VIDEO)   type = "video"  ;
-		if (l.type == Type::SOUND)   type = "sound"  ;
-		if (l.type == Type::FONT)    type = "font"   ;
-		if (l.type == Type::NONE)    type = "none"   ;
-		std::cout << f("type: {}, label: {}, path: {}\n", type, l.label, l.path);
 	}
 
 }
@@ -157,10 +150,10 @@ void textureLoader::reloadTextures(){
 
 	size_t i = 0;
 	for (auto& ctx : textureCTXs){
-		loadedTextures.push_back(LoadTexture(ctx.texturePath));
+		loadedTextures.push_back(LoadTexture(ctx.texturePath.c_str()));
 		SetTextureFilter(loadedTextures[i++], TEXTURE_FILTER_POINT);
 		#ifndef PRINTFULLPATH
-			std::string shortPath = std::string(ctx.texturePath).substr(std::string(ctx.texturePath).find("resources"));
+			std::string shortPath = ctx.texturePath.substr(ctx.texturePath.find("resources"));
 			logger::success("textureLoader: ", (shortPath + " was reloaded").c_str());
 		#else
 			logger::success("textureLoader: ", (std::string(ctx.texturePath) + " was reloaded").c_str());

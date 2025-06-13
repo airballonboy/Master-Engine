@@ -8,7 +8,7 @@ namespace ME {
 class textureLoader{
 public:
 	struct textureCTX{
-		const char* texturePath;
+		std::string texturePath;
 		Vector2 	textureSize  = {128,128};
 		Vector2 	texturePoint = {  0,0  };
 	};
