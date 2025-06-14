@@ -11,7 +11,6 @@
 enum class Type{ NONE = 0, TEXTURE, SOUND, VIDEO, FONT };
 typedef struct {
 	Type type;
-	std::string label;	
 	std::string path;
 }loadable;
 
@@ -69,7 +68,6 @@ void textureLoader::loadTexturesFromConf(std::string path){
 		}else if(isalpha(fileContent[i])){
 			loadable l;
 			std::string type;
-			std::string identifier;
 			std::string path;
 			type.push_back(fileContent[i++]);
 			while (isalnum(fileContent[i])){
@@ -81,14 +79,9 @@ void textureLoader::loadTexturesFromConf(std::string path){
 			else if (strcmp(type.c_str(), "video"  ) == 0) l.type = Type::VIDEO;
 
 			SKIP_SPACES();
-
-			while (isalnum(fileContent[i])){
-				identifier.push_back(fileContent[i++]);
-			}
-			l.label = identifier;
-
-			SKIP_SPACES();
 			EXPECT('=');
+			SKIP_SPACES();
+			EXPECT('>');
 
 			SKIP_SPACES();
 			EXPECT('\"');
