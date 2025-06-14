@@ -88,8 +88,10 @@ void textureLoader::loadTexturesFromConf(std::string path){
 			while (fileContent[i] != '\"') {
 				if (fileContent[i] == '{') {
 					if (i < fileContent.size()) i++;
-					else logger::error("textureLoader: ", "file ended early");
-
+					else {
+						logger::error("textureLoader: ", "file ended early");
+						return;
+					}
 					std::string var;
 					
 					while (fileContent[i] != '}') {
@@ -99,16 +101,25 @@ void textureLoader::loadTexturesFromConf(std::string path){
 						}
 						var.push_back(fileContent[i]);
 						if (i < fileContent.size()) i++;
-						else logger::error("textureLoader: ", "file ended early");
+						else {
+							logger::error("textureLoader: ", "file ended early");
+							return;
+						}
 					}
 					if (i < fileContent.size()) i++;
-					else logger::error("textureLoader: ", "file ended early");
+					else {
+						logger::error("textureLoader: ", "file ended early");
+						return;
+					}
 					if (!strcmp(var.c_str(), "RESOURCES_PATH")) path.append(RESOURCES_PATH);
 					//std::cout << "resources path detected \n";
 				}
 				path.push_back(fileContent[i]);
 				if (i < fileContent.size()) i++;
-				else logger::error("textureLoader: ", "file ended early");
+				else {
+					logger::error("textureLoader: ", "file ended early");
+					return;
+				}
 			}
 			l.path = path;
 			while (fileContent[i] != '\n') {
