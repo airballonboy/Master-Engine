@@ -1,10 +1,16 @@
 #include "renderer.h"
 #include "gameObject.h"
+#include "textureLoader.h"
 #include <raylib.h>
 #include <algorithm>
 
 namespace ME {
 
+bool Renderer::resetTexture(){
+	this->textureIter = textureLoader::isTextureLoaded({this->texturePath.c_str(), this->textureSize, this->framePos});
+	this->texture = textureLoader::loadedTextures[this->textureIter];
+	return true;
+}
 
 void Renderer::renderAll(){
 	std::sort(Renderer::renderOrder.begin(), Renderer::renderOrder.end(),

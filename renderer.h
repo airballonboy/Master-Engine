@@ -39,6 +39,7 @@ public:
 	float animationFrameTime = 0.2f;
 	float currentAnimationTime = 0.f;
 
+	bool resetTexture();
 	static void renderAll();
 
 

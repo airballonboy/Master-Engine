@@ -42,6 +42,7 @@ public:
 	//Gets the object with the id refernced in this Vector
 	static gameObject* gameObjectWithId(size_t id, std::vector<gameObject*>& vector);
 
+	std::string texturePath;
 	Renderer renderer;
 
 	// NOTE: circle not implemented yet

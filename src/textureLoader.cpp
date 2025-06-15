@@ -52,7 +52,7 @@ size_t textureLoader::isTextureLoaded(textureLoader::textureCTX ctx){
 	}
 	return i;	
 }
-void textureLoader::loadTexturesFromConf(std::string inputPath){
+std::vector<loadable> configParser(std::string inputPath) {
 	std::vector<loadable> shouldLoad;
 	std::string fileContent;
     std::stringstream contents_stream;
@@ -90,7 +90,7 @@ void textureLoader::loadTexturesFromConf(std::string inputPath){
 					if (i < fileContent.size()) i++;
 					else {
 						logger::error("textureLoader: ", "file ended early");
-						return;
+						return {};
 					}
 					std::string var;
 					
@@ -103,13 +103,13 @@ void textureLoader::loadTexturesFromConf(std::string inputPath){
 						if (i < fileContent.size()) i++;
 						else {
 							logger::error("textureLoader: ", "file ended early");
-							return;
+							return {};
 						}
 					}
 					if (i < fileContent.size()) i++;
 					else {
 						logger::error("textureLoader: ", "file ended early");
-						return;
+						return {};
 					}
 					if (!strcmp(var.c_str(), "RESOURCES_PATH")) path.append(RESOURCES_PATH);
 					//std::cout << "resources path detected \n";
@@ -118,7 +118,7 @@ void textureLoader::loadTexturesFromConf(std::string inputPath){
 				if (i < fileContent.size()) i++;
 				else {
 					logger::error("textureLoader: ", "file ended early");
-					return;
+					return {};
 				}
 			}
 			l.path = path;
@@ -128,16 +128,26 @@ void textureLoader::loadTexturesFromConf(std::string inputPath){
 			shouldLoad.push_back(l);
 		}
 	}
+	return shouldLoad;
+}
+void textureLoader::loadTexturesFromConf(std::string inputPath){
+	auto shouldLoad = configParser(inputPath);
 	for (auto& l : shouldLoad){
 		if (l.type == Type::TEXTURE){
 			isTextureLoaded({l.path.c_str()});
-			logger::success("textureLoader: ", f("from the file {}", inputPath).c_str());
+			logger::success("textureLoader: ", f("    from the file {}", inputPath).c_str());
 		}
 	}
 
 }
-void textureLoader::unloadTexturesFromConf(std::string path){
-
+void textureLoader::unloadTexturesFromConf(std::string inputPath){
+	auto shouldLoad = configParser(inputPath);
+	for (auto& l : shouldLoad){
+		if (l.type == Type::TEXTURE){
+			unloadTexture({l.path.c_str()});
+			logger::success("textureLoader: ", f("    from the file {}", inputPath).c_str());
+		}
+	}
 }
 void textureLoader::reloadTextures(){
 	size_t clearedCount = loadedTextures.size();
