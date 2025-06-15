@@ -52,11 +52,11 @@ size_t textureLoader::isTextureLoaded(textureLoader::textureCTX ctx){
 	}
 	return i;	
 }
-void textureLoader::loadTexturesFromConf(std::string path){
+void textureLoader::loadTexturesFromConf(std::string inputPath){
 	std::vector<loadable> shouldLoad;
 	std::string fileContent;
     std::stringstream contents_stream;
-	std::fstream input(path, std::ios::in);
+	std::fstream input(inputPath, std::ios::in);
 	contents_stream << input.rdbuf();
 	fileContent = contents_stream.str();
 	input.close();
@@ -131,6 +131,7 @@ void textureLoader::loadTexturesFromConf(std::string path){
 	for (auto& l : shouldLoad){
 		if (l.type == Type::TEXTURE){
 			isTextureLoaded({l.path.c_str()});
+			logger::success("textureLoader: ", f("from the file {}", inputPath).c_str());
 		}
 	}
 
