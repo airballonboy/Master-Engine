@@ -135,7 +135,7 @@ void textureLoader::loadTexturesFromConf(std::string inputPath){
 	for (auto& l : shouldLoad){
 		if (l.type == Type::TEXTURE){
 			isTextureLoaded({l.path.c_str()});
-			logger::success("textureLoader: ", f("    from the file {}", inputPath).c_str());
+			logger::success(f("                 └───► from the file {}", inputPath).c_str());
 		}
 	}
 
