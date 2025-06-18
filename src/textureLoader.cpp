@@ -138,9 +138,13 @@ std::vector<loadable> configParser(std::string inputPath) {
 void textureLoader::loadTexturesFromConf(std::string inputPath){
 	auto shouldLoad = configParser(inputPath);
 	for (auto& l : shouldLoad){
-		if (l.type == Type::TEXTURE){
+		switch (l.type) {
+		case Type::TEXTURE: {
 			isTextureLoaded({l.path.c_str()});
 			logger::success(f("                 └───► from the file {}", get_printable_path(inputPath)).c_str());
+		}break;
+		default:
+			logger::error("textureLoader: ", f("type not yet implemented").c_str());
 		}
 	}
 
@@ -148,9 +152,14 @@ void textureLoader::loadTexturesFromConf(std::string inputPath){
 void textureLoader::unloadTexturesFromConf(std::string inputPath){
 	auto shouldLoad = configParser(inputPath);
 	for (auto& l : shouldLoad){
-		if (l.type == Type::TEXTURE){
+		switch (l.type) {
+		case Type::TEXTURE: {
 			unloadTexture({l.path.c_str()});
-			logger::success("textureLoader: ", f("    from the file {}", get_printable_path(inputPath)).c_str());
+			logger::success(f("                 └───► from the file {}", get_printable_path(inputPath)).c_str());
+		}break;
+		default: {
+			logger::error("textureLoader: ", f("type not yet implemented").c_str());
+		}
 		}
 	}
 }
