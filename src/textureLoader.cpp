@@ -24,6 +24,16 @@ typedef struct {
 		i++;						\
 	}
 
+std::string get_printable_path(std::string path) {
+	#ifndef PRINTFULLPATH
+		std::string shortPath = path.substr(path.find("resources"));
+	#else
+		std::string shortPath = path;
+	#endif
+
+	return shortPath;
+}
+
 namespace ME {
 size_t textureLoader::isTextureLoaded(textureLoader::textureCTX ctx){
 	size_t i = 0;
@@ -42,12 +52,7 @@ size_t textureLoader::isTextureLoaded(textureLoader::textureCTX ctx){
 		SetTextureFilter(loadedTextures[i], TEXTURE_FILTER_POINT);
 		textureCTXs.push_back(ctx);
 
-		#ifndef PRINTFULLPATH
-			std::string shortPath = std::string(ctx.texturePath).substr(std::string(ctx.texturePath).find("resources"));
-			logger::success("textureLoader: ", (shortPath + " was loaded").c_str());
-		#else
-			logger::success("textureLoader: ", (std::string(ctx.texturePath) + " was loaded").c_str());
-		#endif
+		logger::success("textureLoader: ", (get_printable_path(ctx.texturePath) + " was loaded").c_str());
 
 	}
 	return i;	
@@ -135,7 +140,7 @@ void textureLoader::loadTexturesFromConf(std::string inputPath){
 	for (auto& l : shouldLoad){
 		if (l.type == Type::TEXTURE){
 			isTextureLoaded({l.path.c_str()});
-			logger::success(f("                 └───► from the file {}", inputPath).c_str());
+			logger::success(f("                 └───► from the file {}", get_printable_path(inputPath)).c_str());
 		}
 	}
 
@@ -145,7 +150,7 @@ void textureLoader::unloadTexturesFromConf(std::string inputPath){
 	for (auto& l : shouldLoad){
 		if (l.type == Type::TEXTURE){
 			unloadTexture({l.path.c_str()});
-			logger::success("textureLoader: ", f("    from the file {}", inputPath).c_str());
+			logger::success("textureLoader: ", f("    from the file {}", get_printable_path(inputPath)).c_str());
 		}
 	}
 }
@@ -167,12 +172,7 @@ void textureLoader::reloadTextures(){
 	for (auto& ctx : textureCTXs){
 		loadedTextures.push_back(LoadTexture(ctx.texturePath.c_str()));
 		SetTextureFilter(loadedTextures[i++], TEXTURE_FILTER_POINT);
-		#ifndef PRINTFULLPATH
-			std::string shortPath = ctx.texturePath.substr(ctx.texturePath.find("resources"));
-			logger::success("textureLoader: ", (shortPath + " was reloaded").c_str());
-		#else
-			logger::success("textureLoader: ", (std::string(ctx.texturePath) + " was reloaded").c_str());
-		#endif
+		logger::success("textureLoader: ", (get_printable_path(ctx.texturePath) + " was reloaded").c_str());
 	}
 }
 void textureLoader::unloadTexture(textureLoader::textureCTX ctx){
@@ -180,12 +180,7 @@ void textureLoader::unloadTexture(textureLoader::textureCTX ctx){
 	UnloadTexture(loadedTextures[i]);
 	loadedTextures.erase(loadedTextures.begin() + i);
 	textureCTXs.erase(textureCTXs.begin() + i);
-	#ifndef PRINTFULLPATH
-		std::string shortPath = std::string(ctx.texturePath).substr(std::string(ctx.texturePath).find("resources"));
-		logger::success("textureLoader: ", (shortPath + " was unloaded").c_str());
-	#else
-		logger::success("textureLoader: ", (std::string(ctx.texturePath) + " was unloaded").c_str());
-	#endif
+	logger::success("textureLoader: ", (get_printable_path(ctx.texturePath) + " was unloaded").c_str());
 }
 void textureLoader::unloadTextures(){
 	size_t clearedCount = loadedTextures.size();
