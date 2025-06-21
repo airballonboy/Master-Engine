@@ -117,23 +117,22 @@ void gameObject::setDimension(Vector2 d){
 }
 
 void gameObject::collisionStruct::updateCollision(std::vector<gameObject*>& GV){
-	auto checkCollision = [](gameObject* o1, gameObject* o2){
+	auto updateCollisionBox = [](gameObject* o){
+		o->collision.collisionBox = {
+			o->transform.pos.x - (o->collision.colliderSize.x / 2),
+			o->transform.pos.y - (o->collision.colliderSize.y / 2),
+			o->collision.colliderSize.x,
+			o->collision.colliderSize.y
+		};
+	};
+	auto checkCollision = [updateCollisionBox](gameObject* o1, gameObject* o2){
 		assert(o1 != nullptr && o2 != nullptr && "accessing a nullptr");
-		o1->collision.collisionBox = {
-			o1->transform.pos.x - (o1->collision.colliderSize.x / 2),
-			o1->transform.pos.y - (o1->collision.colliderSize.y / 2),
-			o1->collision.colliderSize.x,
-			o1->collision.colliderSize.y
-		};
-		o2->collision.collisionBox = {
-			o2->transform.pos.x - (o2->collision.colliderSize.x / 2),
-			o2->transform.pos.y - (o2->collision.colliderSize.y / 2),
-			o2->collision.colliderSize.x,
-			o2->collision.colliderSize.y
-		};
+		updateCollisionBox(o1);
+		updateCollisionBox(o2);
 		return CheckCollisionRecs(o1->collision.collisionBox, o2->collision.collisionBox);
 	};
 	for (auto& objA : GV) {
+		updateCollisionBox(objA);
 		if (objA->erased || !objA->collision.enableCollision) continue;
 		if (objA->collision.collided){
 			if (objA->collision.collidedWith->erased || !checkCollision(objA, objA->collision.collidedWith)){
@@ -150,6 +149,7 @@ void gameObject::collisionStruct::updateCollision(std::vector<gameObject*>& GV){
 			continue;
 		}
 		for (auto& objB : GV) {
+			updateCollisionBox(objB);
 			if ((objB->erased) || (objA->id == objB->id) || (!objB->collision.enableCollision)) continue;	
 			if (checkCollision(objA, objB)) {
 				//std::cout << "obj: " << objA->id << " collided with obj: " << objB->id << std::endl;
