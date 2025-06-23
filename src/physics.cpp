@@ -1,5 +1,6 @@
 #include "physics/physics.h"
 #include "gameObject.h"
+#include "raymath.h"
 #include <raylib.h>
 #include <cstdio>
 
@@ -14,6 +15,9 @@ physicsObject::physicsObject(){}
 
 
 void physicsObject::updatePhysics(){
+	if (this->enableGravity)
+		this->applyGravity();
+	forceToAcc();
 	
 }
 
