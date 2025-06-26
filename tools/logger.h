@@ -1,5 +1,5 @@
-#ifndef MASTERLOGGER
-#define MASTERLOGGER
+#ifndef LOGGER_H
+#define LOGGER_H
 
 #include <iostream>
 
@@ -50,4 +50,4 @@ inline void error(const char* prefix, const char* errorMassage)
 
 }
 
-#endif
+#endif //LOGGER_H

@@ -1,5 +1,6 @@
-#pragma once
-#include <optional>
+#ifndef FORMAT_H
+#define FORMAT_H
+
 #include <iomanip>
 #include <sstream>
 #include <string>
@@ -77,3 +78,4 @@ std::string f(const std::string& fmt, const Args&... args) {
     return oss.str();
 }
 
+#endif //FORMAT_H

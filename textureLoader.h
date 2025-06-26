@@ -1,4 +1,6 @@
-#pragma once
+#ifndef TEXTURELOADER_H
+#define TEXTURELOADER_H
+
 #include <raylib.h>
 #include <string>
 #include <cstddef>
@@ -25,3 +27,4 @@ public:
 };
 }
 
+#endif //TEXTURELOADER_H
