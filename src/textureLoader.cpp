@@ -8,20 +8,23 @@
 #include <cstddef>
 #include <string>
 #include <fstream>
+
 enum class Type{ NONE = 0, TEXTURE, SOUND, VIDEO, FONT };
 typedef struct {
     Type type;
     std::string path;
 }loadable;
 
-#define EXPECT(c)                                                                                                           \
-    if(fileContent[i] != c) {                                                                                               \
-        logger::error("textureLoader: ", f("error while parsing, expected token {} but got {}", c, fileContent[i]).c_str());\
-    }else {i++;}
+#define EXPECT(c)                                                                                                               \
+    do {                                                                                                                        \
+        if(fileContent[i] != c) {                                                                                               \
+            logger::error("textureLoader: ", f("error while parsing, expected token {} but got {}", c, fileContent[i]).c_str());\
+        }else {i++;}                                                                                                            \
+    }while(0)
 
-#define SKIP_SPACES()               \
-    while (isspace(fileContent[i])){\
-        i++;                        \
+#define SKIP_SPACES()                 \
+    while (isspace(fileContent[i])){  \
+        i++;                          \
     }
 
 std::string get_printable_path(std::string path) {
