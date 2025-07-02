@@ -6,7 +6,8 @@
 
 namespace ME {
 physicsObject::physicsObject(const char* _texturePath, Vector2 _textureSize, Vector2 _framePos) 
-                                : gameObject(_texturePath, _textureSize, _framePos){
+                                : gameObject(_texturePath, _textureSize, _framePos)
+{
     
 
     
@@ -14,7 +15,7 @@ physicsObject::physicsObject(const char* _texturePath, Vector2 _textureSize, Vec
 physicsObject::physicsObject(){}
 
 
-void physicsObject::updatePhysics(){
+void physicsObject::update(){
     if (this->enableGravity)
         this->applyGravity();
     forceToAcc();

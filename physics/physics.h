@@ -11,7 +11,7 @@ public:
     physicsObject(const char* texturePath, Vector2 textureSize = {128,128}, Vector2 framePos = {0,0});
     physicsObject();
 
-    void updatePhysics();
+    void update();
 
     struct Force
     {
